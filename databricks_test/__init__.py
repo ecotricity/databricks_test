@@ -87,6 +87,12 @@ class Session():
         self.spark = (SparkSession.builder
                       .master("local")
                       .appName("test-pyspark")
+                      #add delta lake support
+                      .config("spark.jars.packages", "io.delta:delta-core_2.12:0.7.0")
+                      .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+                      .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+                      #set default SerDe to parquet
+                      .config("hive.default.fileformat","parquet")
                       .enableHiveSupport()
                       .getOrCreate())
 
