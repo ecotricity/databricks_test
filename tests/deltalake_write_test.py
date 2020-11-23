@@ -1,4 +1,3 @@
-import pandas as pd
 import databricks_test
 from tempfile import TemporaryDirectory
 

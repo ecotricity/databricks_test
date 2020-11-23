@@ -63,6 +63,7 @@ See samples below for more examples.
 * PySpark with all Spark features including reading and writing to disk, UDFs and Pandas UDFs
 * Databricks Utilities (`dbutils`, `display`) with user-configurable mocks
 * Mocking connectors such as Azure Storage, S3 and SQL Data Warehouse
+* Helper function to compare and evaluate the results of Spark SQL queries
 
 ## Unsupported features
 
@@ -70,6 +71,25 @@ See samples below for more examples.
 * Non-python cells such as `%scala` and `%sql` (those cells are skipped, as they are stored in `.py` notebooks as comments)
 * Writing directly to `/dbfs` mount on local filesystem
 * Databricks extensions to Spark such as `spark.read.format("binaryFile")`
+
+## Helper functions
+
+Helper functions are available to assist with Spark SQL queries:
+
+### `Session.assert_queries_are_equal(actual_query, expected_query)`
+
+* Asserts that the result sets returned by two supplied Spark SQL queries are equal
+* A detailed table comparison output is only shown in the event the assertion fails. 
+In the table comparison output, the first column (`m`) can have three different values:
+  * the symbol `<` indicates that the row was found in the *expected* results but did not match anything in the *actual* results
+  * the symbol `>` indicates that the row was found in the *actual* table but not in the *expected* table
+  * the symbol `=` indicates that the row was matched between the *expected* and *actual* tables
+  * *this behaviour is inspired by the `tSQLt` unit test framework for SQL Server*
+
+### `Session.assert_query_returns_no_rows(actual_query)`
+
+* Assets that the result set returned by a supplied Spark SQL query is empty
+* A detailed table comparison output is only shown in the event that the result set is not empty
 
 ## Sample test
 
