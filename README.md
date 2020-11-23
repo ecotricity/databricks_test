@@ -258,6 +258,51 @@ def test_sqldw(monkeypatch):
         assert_frame_equal(expectedDF, resultDF, check_dtype=False)
 ```
 
+## Spark SQL comparison functions
+
+A test comparing the output of two Spark SQL queries using the 
+`assert_queries_are_equal` function:
+
+```python
+def test_results_do_not_match():
+    with databricks_test.session() as dbrickstest:
+        actual_query = """
+        SELECT col1,col2
+        FROM
+        (VALUES 
+          (100,'foo'),
+          (101,'bar'),
+          (102,'baz')
+        ) AS v (col1, col2)
+        """
+
+        expected_query = """
+        SELECT col1,col2
+        FROM
+        (VALUES 
+          (100,'foo'),
+          (110,'bar'),
+          (999,'qux')
+        ) AS v (col1, col2)
+        """
+        
+        dbrickstest.assert_queries_are_equal(actual_query, expected_query)
+```
+
+A test validating that the output of a Spark SQL query returns no rows 
+using the `assert_query_returns_no_rows` function:
+
+```python
+def test_no_rows_returned():
+    with databricks_test.session() as dbrickstest:
+        query = """
+        SELECT 100 AS col1, 'abc' AS col2
+        WHERE 1=2
+        """
+
+        dbrickstest.assert_query_returns_no_rows(query)
+```
+
 ## Issues
 
 Please report issues at [http://github.com/algattik/databricks_test](http://github.com/algattik/databricks_test).
