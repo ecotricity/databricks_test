@@ -16,3 +16,14 @@ def test_deltalake_write():
 
             # Run notebook
             dbrickstest.run_notebook(".", "deltalake_write_notebook")
+
+            # Read delta
+            df = dbrickstest.spark.read.format("delta").load(out_dir)
+
+            # Validate dataframe contains the expected values
+            rg = range(0, 5)
+            for n in rg:
+                assert df.filter(df["id"]==n).count() == 1
+
+            # Validate dataframe contains no unexpected values
+            assert df.count() == 5
