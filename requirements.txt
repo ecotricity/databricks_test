@@ -4,3 +4,5 @@ black
 coala
 flake8
 pylint
+PyArrow>=0.15.1
+

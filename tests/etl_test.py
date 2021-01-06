@@ -15,8 +15,7 @@ def test_etl():
                 "input": "tests/etl_input.csv",
                 "output": out_dir,
             }
-            dbrickstest.dbutils.widgets.get.side_effect = lambda x: switch.get(
-                x, "")
+            dbrickstest.dbutils.widgets.get.side_effect = lambda x: switch.get(x, "")
 
             # Run notebook
             dbrickstest.run_notebook(".", "etl_notebook")

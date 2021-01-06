@@ -14,14 +14,12 @@ def test_sqldw(monkeypatch):
         # Mock SQL DW loader, creating a Spark DataFrame instead
         def mock_load(reader):
             return (
-                dbrickstest.spark
-                .range(10)
+                dbrickstest.spark.range(10)
                 .withColumn("age", F.col("id") * 6)
                 .withColumn("salary", F.col("id") * 10000)
             )
 
-        monkeypatch.setattr(
-            pyspark.sql.readwriter.DataFrameReader, "load", mock_load)
+        monkeypatch.setattr(pyspark.sql.readwriter.DataFrameReader, "load", mock_load)
 
         # Mock SQL DW writer, writing to a local Parquet file instead
         def mock_save(writer):
@@ -29,8 +27,7 @@ def test_sqldw(monkeypatch):
             writer.format("parquet")
             writer.save(out_dir)
 
-        monkeypatch.setattr(
-            pyspark.sql.readwriter.DataFrameWriter, "save", mock_save)
+        monkeypatch.setattr(pyspark.sql.readwriter.DataFrameWriter, "save", mock_save)
 
         # Run notebook
         dbrickstest.run_notebook(".", "sqldw_notebook")

@@ -1,8 +1,9 @@
 # Databricks notebook source
 
 # Instrument for unit tests. This is only executed in local unit tests, not in Databricks.
-if 'dbutils' not in locals():
+if "dbutils" not in locals():
     import ecotricity_databricks_test
+
     ecotricity_databricks_test.inject_variables()
 
 # COMMAND ----------
@@ -14,8 +15,7 @@ assert isinstance(res, bool) and res
 
 res = dbutils.library.installPyPI("pypiPackage")
 assert isinstance(res, bool) and res
-res = dbutils.library.installPyPI(
-    "pypiPackage", version="1", repo="repo", extras="extras")
+res = dbutils.library.installPyPI("pypiPackage", version="1", repo="repo", extras="extras")
 assert isinstance(res, bool) and res
 
 res = dbutils.library.list()

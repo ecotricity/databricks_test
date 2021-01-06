@@ -87,22 +87,26 @@ class DbUtils(object):
         self.library = Library()
 
 
-class Session():
+class Session:
     def __init__(self):
         self.display = MagicMock()
         self.displayHTML = MagicMock()
         self.dbutils = DbUtils()
-        self.spark = (SparkSession.builder
-                      .master("local")
-                      .appName("test-pyspark")
-                      #add delta lake support
-                      .config("spark.jars.packages", "io.delta:delta-core_2.12:0.7.0")
-                      .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-                      .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-                      #set default SerDe to parquet
-                      .config("hive.default.fileformat","parquet")
-                      .enableHiveSupport()
-                      .getOrCreate())
+        self.spark = (
+            SparkSession.builder.master("local")
+            .appName("test-pyspark")
+            # add delta lake support
+            .config("spark.jars.packages", "io.delta:delta-core_2.12:0.7.0")
+            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+            .config(
+                "spark.sql.catalog.spark_catalog",
+                "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+            )
+            # set default SerDe to parquet
+            .config("hive.default.fileformat", "parquet")
+            .enableHiveSupport()
+            .getOrCreate()
+        )
 
     def run_notebook(self, dir, script):
         """
@@ -119,14 +123,14 @@ class Session():
         except WorkflowInterrupted:
             pass
 
-    def get_show_string(self, df, n=20, truncate=True, vertical=False)->str:
+    def get_show_string(self, df, n=20, truncate=True, vertical=False) -> str:
         """
         Returns the output of the `.show()` function as a string
         """
         if isinstance(truncate, bool) and truncate:
-            return(df._jdf.showString(n, 20, vertical))
+            return df._jdf.showString(n, 20, vertical)
         else:
-            return(df._jdf.showString(n, int(truncate), vertical))
+            return df._jdf.showString(n, int(truncate), vertical)
 
     def assert_queries_are_equal(self, actual_query, expected_query):
         """
@@ -136,7 +140,8 @@ class Session():
 
         The detailed table comparison output is only shown in the event of a failure
         """
-        result_df = self.spark.sql(f"""
+        result_df = self.spark.sql(
+            f"""
             WITH actual
             AS
             ({actual_query})
@@ -156,10 +161,10 @@ class Session():
             UNION ALL
             SELECT '>' AS m, * FROM missing
             UNION ALL
-            SELECT '<' AS m, * FROM extra  
+            SELECT '<' AS m, * FROM extra
         """
         )
-        
+
         failure_count = result_df.where(col("m").isin({">", "<"})).count()
         if failure_count > 0:
             msg = self.get_show_string(result_df, n=result_df.count(), truncate=False)
@@ -170,7 +175,7 @@ class Session():
         Asserts that a query returns an empty result set
         """
         result_df = self.spark.sql(actual_query)
-        
+
         record_count = result_df.count()
         if record_count > 0:
             msg = self.get_show_string(result_df, n=result_df.count(), truncate=False)
@@ -183,22 +188,22 @@ def inject_variables():
     """
     stack = inspect.stack()
     fvar = stack[1].frame.f_locals
-    fvar['display'] = globalSession.display
-    fvar['displayHTML'] = globalSession.displayHTML
-    fvar['dbutils'] = globalSession.dbutils
-    fvar['spark'] = globalSession.spark
-    fvar['sc'] = globalSession.spark.sparkContext
-    fvar['sqlContext'] = globalSession.spark
-    fvar['table'] = globalSession.spark.table
-    fvar['sql'] = globalSession.spark.sql
-    fvar['udf'] = udf
+    fvar["display"] = globalSession.display
+    fvar["displayHTML"] = globalSession.displayHTML
+    fvar["dbutils"] = globalSession.dbutils
+    fvar["spark"] = globalSession.spark
+    fvar["sc"] = globalSession.spark.sparkContext
+    fvar["sqlContext"] = globalSession.spark
+    fvar["table"] = globalSession.spark.table
+    fvar["sql"] = globalSession.spark.sql
+    fvar["udf"] = udf
 
 
 class SessionAlreadyExistsException(Exception):
     pass
 
 
-class session():
+class session:
     """
     Context manager to override mocks within test scope
     """
@@ -215,7 +220,7 @@ class session():
         globalSession = None
 
 
-class add_path():
+class add_path:
     """
     Context manager to temporarily add an entry to sys.path
     """

@@ -6,8 +6,9 @@ from pyspark.sql.functions import col, pandas_udf, PandasUDFType
 # COMMAND ----------
 
 # Instrument for unit tests. This is only executed in local unit tests, not in Databricks.
-if 'dbutils' not in locals():
+if "dbutils" not in locals():
     import ecotricity_databricks_test
+
     ecotricity_databricks_test.inject_variables()
 
 # COMMAND ----------
@@ -26,8 +27,7 @@ dbutils.widgets.text("keyname", "")
 spark.conf.set(
     dbutils.widgets.get("keyname"),
     dbutils.secrets.get(
-        scope=dbutils.widgets.get("secretscope"),
-        key=dbutils.widgets.get("secretname")
+        scope=dbutils.widgets.get("secretscope"), key=dbutils.widgets.get("secretname")
     ),
 )
 
@@ -45,7 +45,7 @@ df = (
     spark.read.format("csv")
     .options(header="true", mode="FAILFAST")
     .schema(schema)
-    .load(dbutils.widgets.get('input'))
+    .load(dbutils.widgets.get("input"))
 )
 display(df)
 
@@ -53,10 +53,11 @@ display(df)
 
 df.count()
 
+
 # COMMAND ----------
 
 # Inputs and output are pandas.Series of doubles
-@pandas_udf('integer', PandasUDFType.SCALAR)
+@pandas_udf("integer", PandasUDFType.SCALAR)
 def square(x):
     return x * x
 
@@ -64,8 +65,8 @@ def square(x):
 # COMMAND ----------
 
 # Write out Parquet data
-(df
-    .withColumn("aSquaredInteger", square(col("anInteger")))
-    .write
-    .parquet(dbutils.widgets.get('output'))
- )
+(
+    df.withColumn("aSquaredInteger", square(col("anInteger"))).write.parquet(
+        dbutils.widgets.get("output")
+    )
+)

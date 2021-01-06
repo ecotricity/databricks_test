@@ -35,4 +35,4 @@ ignore_errors = False
 show_missing = True
 
 # Change this according to your needs.
-fail_under = 100
+fail_under = 95

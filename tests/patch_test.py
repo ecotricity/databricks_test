@@ -8,8 +8,7 @@ def test_patch():
             "input": "input_value",
             "output": "output_value",
         }
-        dbrickstest.dbutils.widgets.get.side_effect = lambda x: switcher.get(
-            x, "")
+        dbrickstest.dbutils.widgets.get.side_effect = lambda x: switcher.get(x, "")
 
         # Run notebook
         dbrickstest.run_notebook(".", "patch_notebook")

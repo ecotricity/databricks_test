@@ -11,8 +11,7 @@ def test_deltalake_write():
             switch = {
                 "output": out_dir,
             }
-            dbrickstest.dbutils.widgets.get.side_effect = lambda x: switch.get(
-                x, "")
+            dbrickstest.dbutils.widgets.get.side_effect = lambda x: switch.get(x, "")
 
             # Run notebook
             dbrickstest.run_notebook(".", "deltalake_write_notebook")
@@ -23,7 +22,7 @@ def test_deltalake_write():
             # Validate dataframe contains the expected values
             rg = range(0, 5)
             for n in rg:
-                assert df.filter(df["id"]==n).count() == 1
+                assert df.filter(df["id"] == n).count() == 1
 
             # Validate dataframe contains no unexpected values
             assert df.count() == 5

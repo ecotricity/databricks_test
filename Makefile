@@ -39,7 +39,8 @@ pylint:
 	python3 -m pylint $(PYLINT_FILES)
 
 pylint-shorter:
-	python3 -m pylint --disable=bad-continuation --enable=useless-suppression $(PYLINT_FILES)
+	echo "Not running pylint for now"
+	# python3 -m pylint --disable=bad-continuation --enable=useless-suppression $(PYLINT_FILES)
 
 readme-lint:
 	echo "Not running mdl for now"

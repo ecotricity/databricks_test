@@ -269,7 +269,7 @@ def test_results_do_not_match():
         actual_query = """
         SELECT col1,col2
         FROM
-        (VALUES 
+        (VALUES
           (100,'foo'),
           (101,'bar'),
           (102,'baz')
@@ -279,7 +279,7 @@ def test_results_do_not_match():
         expected_query = """
         SELECT col1,col2
         FROM
-        (VALUES 
+        (VALUES
           (100,'foo'),
           (110,'bar'),
           (999,'qux')
