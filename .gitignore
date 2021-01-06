@@ -126,3 +126,7 @@ dmypy.json
 
 metastore_db/
 spark-warehouse/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
