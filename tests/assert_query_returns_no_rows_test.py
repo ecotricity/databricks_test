@@ -1,9 +1,9 @@
-import databricks_test
+import ecotricity_databricks_test
 import pytest
 
 
 def test_no_rows_returned():
-    with databricks_test.session() as dbrickstest:
+    with ecotricity_databricks_test.session() as dbrickstest:
         query = """
         SELECT col1,col2
         FROM
@@ -18,7 +18,7 @@ def test_no_rows_returned():
         dbrickstest.assert_query_returns_no_rows(query)
 
 def test_rows_returned():
-    with databricks_test.session() as dbrickstest:
+    with ecotricity_databricks_test.session() as dbrickstest:
         query = """
         SELECT col1,col2
         FROM

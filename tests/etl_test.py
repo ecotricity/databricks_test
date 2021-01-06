@@ -1,12 +1,12 @@
 import pandas as pd
-import databricks_test
+import ecotricity_databricks_test
 from tempfile import TemporaryDirectory
 
 from pandas.testing import assert_frame_equal
 
 
 def test_etl():
-    with databricks_test.session() as dbrickstest:
+    with ecotricity_databricks_test.session() as dbrickstest:
         with TemporaryDirectory() as tmp_dir:
             out_dir = f"{tmp_dir}/out"
 

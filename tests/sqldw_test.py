@@ -1,4 +1,4 @@
-import databricks_test
+import ecotricity_databricks_test
 import pyspark
 import pyspark.sql.functions as F
 from tempfile import TemporaryDirectory
@@ -7,7 +7,7 @@ import pandas as pd
 
 
 def test_sqldw(monkeypatch):
-    with databricks_test.session() as dbrickstest, TemporaryDirectory() as tmp:
+    with ecotricity_databricks_test.session() as dbrickstest, TemporaryDirectory() as tmp:
 
         out_dir = f"{tmp}/out"
 

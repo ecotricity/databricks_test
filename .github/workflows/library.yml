@@ -1,0 +1,65 @@
+name: library
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '*.*.*'
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: eu-west-1
+      AWS_ACCESS_KEY_ID: ${{ secrets.PYTHON_CODEARTIFACT_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.PYTHON_CODEARTIFACT_AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: setup codeartifacts pypi
+        run: |
+          pip config set global.index-url "https://aws:$(aws codeartifact get-authorization-token --domain ecotricity --query authorizationToken --output text)@${{ secrets.PYTHON_PYPI_API }}"
+      - name: install
+        run: make install
+      - name: test
+        run: make test
+
+  release:
+    name: release
+    if: github.ref == 'refs/heads/master'
+    needs: [test]
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: eu-west-1
+      AWS_ACCESS_KEY_ID: ${{ secrets.PYTHON_CODEARTIFACT_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.PYTHON_CODEARTIFACT_AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: setup codeartifacts pypi
+        run: |
+          pip config set global.index-url "https://aws:$(aws codeartifact get-authorization-token --domain ecotricity --query authorizationToken --output text)@${{ secrets.PYTHON_PYPI_API }}"
+      - name: install
+        run: make install
+      - name: release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "GitHub Actions" \
+            && git config --global user.email "devteam@ecotricity.co.uk" \
+            && pip install python-semantic-release \
+            && semantic-release publish
+      - name: upload
+        run: |
+          ([ ! -d dist ] && echo 'Skipping upload, no dist') \
+            || (aws codeartifact login --tool twine --domain ecotricity --repository python \
+                 && twine upload --repository codeartifact dist/*)

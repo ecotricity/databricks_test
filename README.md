@@ -19,8 +19,8 @@ Add a cell at the beginning of your Databricks notebook:
 ```python
 # Instrument for unit tests. This is only executed in local unit tests, not in Databricks.
 if 'dbutils' not in locals():
-    import databricks_test
-    databricks_test.inject_variables()
+    import ecotricity_databricks_test
+    ecotricity_databricks_test.inject_variables()
 ```
 
 The `if` clause causes the inner code to be skipped when run in Databricks.
@@ -33,10 +33,10 @@ Set up pytest in your code project (outside of Databricks).
 Create a test case with the following structure:
 
 ```python
-import databricks_test
+import ecotricity_databricks_test
 
 def test_method():
-    with databricks_test.session() as dbrickstest:
+    with ecotricity_databricks_test.session() as dbrickstest:
 
         # Set up mocks on dbrickstest
         # ...
@@ -97,13 +97,13 @@ Sample test case for an ETL notebook reading CSV and writing Parquet.
 
 ```python
 import pandas as pd
-import databricks_test
+import ecotricity_databricks_test
 from tempfile import TemporaryDirectory
 
 from pandas.testing import assert_frame_equal
 
 def test_etl():
-    with databricks_test.session() as dbrickstest:
+    with ecotricity_databricks_test.session() as dbrickstest:
         with TemporaryDirectory() as tmp_dir:
             out_dir = f"{tmp_dir}/out"
 
@@ -143,8 +143,8 @@ from pyspark.sql.functions import col, pandas_udf, PandasUDFType
 
 # Instrument for unit tests. This is only executed in local unit tests, not in Databricks.
 if 'dbutils' not in locals():
-    import databricks_test
-    databricks_test.inject_variables()
+    import ecotricity_databricks_test
+    ecotricity_databricks_test.inject_variables()
 
 # COMMAND ----------
 
@@ -213,7 +213,7 @@ def square(x):
 Sample test case mocking PySpark classes for a notebook connecting to Azure SQL Data Warehouse.
 
 ```python
-import databricks_test
+import ecotricity_databricks_test
 import pyspark
 import pyspark.sql.functions as F
 from tempfile import TemporaryDirectory
@@ -222,7 +222,7 @@ import pandas as pd
 
 
 def test_sqldw(monkeypatch):
-    with databricks_test.session() as dbrickstest, TemporaryDirectory() as tmp:
+    with ecotricity_databricks_test.session() as dbrickstest, TemporaryDirectory() as tmp:
 
         out_dir = f"{tmp}/out"
 

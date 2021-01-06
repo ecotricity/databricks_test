@@ -1,9 +1,9 @@
-import databricks_test
+import ecotricity_databricks_test
 from tempfile import TemporaryDirectory
 
 
 def test_deltalake_write():
-    with databricks_test.session() as dbrickstest:
+    with ecotricity_databricks_test.session() as dbrickstest:
         with TemporaryDirectory() as tmp_dir:
             out_dir = f"{tmp_dir}/delta_out"
 

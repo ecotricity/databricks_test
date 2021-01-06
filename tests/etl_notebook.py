@@ -7,8 +7,8 @@ from pyspark.sql.functions import col, pandas_udf, PandasUDFType
 
 # Instrument for unit tests. This is only executed in local unit tests, not in Databricks.
 if 'dbutils' not in locals():
-    import databricks_test
-    databricks_test.inject_variables()
+    import ecotricity_databricks_test
+    ecotricity_databricks_test.inject_variables()
 
 # COMMAND ----------
 

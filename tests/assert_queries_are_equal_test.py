@@ -1,9 +1,9 @@
-import databricks_test
+import ecotricity_databricks_test
 import pytest
 
 
 def test_results_match():
-    with databricks_test.session() as dbrickstest:
+    with ecotricity_databricks_test.session() as dbrickstest:
         query = """
         SELECT col1,col2
         FROM
@@ -17,7 +17,7 @@ def test_results_match():
         dbrickstest.assert_queries_are_equal(query, query)
 
 def test_results_do_not_match():
-    with databricks_test.session() as dbrickstest:
+    with ecotricity_databricks_test.session() as dbrickstest:
         actual_query = """
         SELECT col1,col2
         FROM
@@ -44,7 +44,7 @@ def test_results_do_not_match():
         assert str(exception_message.value).startswith("the result sets did not match:")
 
 def test_unexpected_result():
-    with databricks_test.session() as dbrickstest:
+    with ecotricity_databricks_test.session() as dbrickstest:
         actual_query = """
         SELECT col1,col2
         FROM
@@ -77,7 +77,7 @@ def test_unexpected_result():
         assert str(exception_message.value)==expected_message
 
 def test_missing_result():
-    with databricks_test.session() as dbrickstest:
+    with ecotricity_databricks_test.session() as dbrickstest:
         actual_query = """
         SELECT col1,col2
         FROM

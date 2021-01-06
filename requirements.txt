@@ -1,0 +1,6 @@
+pytest
+pytest-cov
+black
+coala
+flake8
+pylint

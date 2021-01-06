@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+"""Databricks testing module"""
 from unittest.mock import MagicMock
 import inspect
 from pyspark.sql import SparkSession
@@ -6,6 +8,12 @@ import importlib
 import sys
 import os
 
+
+__module__ = "ecotricity_databricks_test"
+__repo__ = "databricks_test"
+__description__ = "Unit testing and mocking for Databricks"
+# version does not need to be updated - managed by semantic-release
+__version__ = "0.0.0"
 
 globalSession = None
 
